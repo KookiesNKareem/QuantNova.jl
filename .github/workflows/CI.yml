@@ -78,6 +78,9 @@ jobs:
       - name: Build VitePress site
         working-directory: docs
         run: npm run docs:build
+      - name: Create root redirect
+        run: |
+          echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; URL=./1/"><link rel="canonical" href="./1/"></head><body><p>Redirecting to <a href="./1/">documentation</a>...</p></body></html>' > docs/build/index.html
       - name: Deploy to GitHub Pages
         if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4
