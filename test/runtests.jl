@@ -6,4 +6,5 @@ using Quasar
     include("AD/test_ad.jl")
     include("Instruments/test_instruments.jl")
     include("Portfolio/test_portfolio.jl")
+    include("Risk/test_risk.jl")
 end
