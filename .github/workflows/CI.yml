@@ -70,11 +70,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: julia --project=docs docs/make.jl
+      - name: Fix home page frontmatter
+        run: |
+          # DocumenterVitepress corrupts YAML frontmatter, copy original
+          cp docs/src/index.md docs/build/.documenter/index.md
       - name: Install npm dependencies
         working-directory: docs
         run: |
           npm install
           npm install @rollup/rollup-linux-x64-gnu --save-optional
+      - name: Fix frontmatter corruption
+        run: |
+          # DocumenterVitepress mangles nested YAML frontmatter - restore original
+          cp docs/src/index.md docs/build/.documenter/index.md
       - name: Build VitePress site
         working-directory: docs
         run: npm run docs:build
