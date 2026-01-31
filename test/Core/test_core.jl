@@ -12,3 +12,20 @@ using Quasar
         @test AbstractADBackend <: Any
     end
 end
+
+@testset "MarketState" begin
+    state = MarketState(
+        prices=Dict("AAPL" => 150.0, "GOOG" => 140.0),
+        rates=Dict("USD" => 0.05),
+        volatilities=Dict("AAPL" => 0.2, "GOOG" => 0.25),
+        timestamp=0.0
+    )
+
+    @test state.prices["AAPL"] == 150.0
+    @test state.rates["USD"] == 0.05
+    @test state.volatilities["AAPL"] == 0.2
+    @test state.timestamp == 0.0
+
+    # Immutability - should error on modification attempt
+    @test_throws MethodError state.prices["AAPL"] = 160.0
+end

@@ -61,10 +61,64 @@ Abstract type for automatic differentiation backends.
 abstract type AbstractADBackend end
 
 # ============================================================================
+# Core Types
+# ============================================================================
+
+# Simple immutable dict wrapper
+struct ImmutableDict{K,V} <: AbstractDict{K,V}
+    data::Dict{K,V}
+
+    # Inner constructor that copies to ensure immutability
+    function ImmutableDict{K,V}(d::Dict{K,V}) where {K,V}
+        new{K,V}(copy(d))
+    end
+end
+# Outer constructor for type inference
+ImmutableDict(d::Dict{K,V}) where {K,V} = ImmutableDict{K,V}(d)
+
+Base.getindex(d::ImmutableDict, k) = d.data[k]
+Base.haskey(d::ImmutableDict, k) = haskey(d.data, k)
+Base.keys(d::ImmutableDict) = keys(d.data)
+Base.values(d::ImmutableDict) = values(d.data)
+Base.length(d::ImmutableDict) = length(d.data)
+Base.iterate(d::ImmutableDict, args...) = iterate(d.data, args...)
+Base.setindex!(::ImmutableDict, v, k) = throw(MethodError(setindex!, (ImmutableDict, v, k)))
+
+"""
+    MarketState{P,R,V,T}
+
+Immutable snapshot of market conditions.
+
+# Fields
+- `prices::P` - Current prices by symbol
+- `rates::R` - Interest rates by currency
+- `volatilities::V` - Implied volatilities by symbol
+- `timestamp::T` - Time of snapshot
+"""
+struct MarketState{P,R,V,T}
+    prices::P
+    rates::R
+    volatilities::V
+    timestamp::T
+end
+
+# Keyword constructor for convenience
+function MarketState(; prices, rates, volatilities, timestamp)
+    # Convert to immutable dictionaries for safety
+    MarketState(
+        ImmutableDict(prices),
+        ImmutableDict(rates),
+        ImmutableDict(volatilities),
+        timestamp
+    )
+end
+
+# ============================================================================
 # Exports
 # ============================================================================
 
 export AbstractInstrument, AbstractEquity, AbstractDerivative, AbstractOption, AbstractFuture
 export AbstractPortfolio, AbstractRiskMeasure, AbstractADBackend
+export MarketState, ImmutableDict
 
 end
