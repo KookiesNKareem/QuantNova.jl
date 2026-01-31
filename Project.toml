@@ -1,0 +1,7 @@
+name = "Quasar"
+uuid = "1b0303c1-8819-4d1c-a929-91cb710ac874"
+authors = ["Kareem Fareed"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.11"
