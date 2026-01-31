@@ -103,8 +103,8 @@ import .MarketData: load, save
 # Interest rates
 include("InterestRates.jl")
 using .InterestRates
-# TODO: Export black_swaption (Swaption type exists but black_swaption not exported)
 export RateCurve, DiscountCurve, ZeroCurve, ForwardCurve
+export NelsonSiegelCurve, SvenssonCurve, fit_nelson_siegel, fit_svensson
 export discount, zero_rate, forward_rate, instantaneous_forward
 export LinearInterp, LogLinearInterp, CubicSplineInterp
 export DepositRate, FuturesRate, SwapRate, bootstrap
@@ -115,5 +115,27 @@ export ShortRateModel, Vasicek, CIR, HullWhite
 export bond_price, short_rate, simulate_short_rate
 export Caplet, Floorlet, Cap, Floor, Swaption
 export black_caplet, black_floorlet, black_cap, black_floor
+
+# Simulation engine
+include("Simulation.jl")
+using .Simulation
+export SimulationState, portfolio_value
+export Order, Fill, AbstractExecutionModel, InstantFill, SlippageModel, MarketImpactModel
+export execute
+export MarketSnapshot, AbstractDriver, HistoricalDriver
+export SimulationResult, simulate
+
+# Backtesting
+include("Backtesting.jl")
+using .Backtesting
+export AbstractStrategy, generate_orders, should_rebalance
+export BuyAndHoldStrategy, RebalancingStrategy
+export BacktestResult, backtest, compute_backtest_metrics
+
+# Scenario Analysis
+include("ScenarioAnalysis.jl")
+using .ScenarioAnalysis
+export StressScenario, ScenarioImpact, CRISIS_SCENARIOS
+export apply_scenario, scenario_impact
 
 end

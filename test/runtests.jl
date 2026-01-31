@@ -32,4 +32,7 @@ using Quasar
     include("full_pipeline.jl")
     include("backend_parity.jl")
     include("interest_rates.jl")
+    include("simulation.jl")
+    include("backtesting.jl")
+    include("scenario_analysis.jl")
 end
