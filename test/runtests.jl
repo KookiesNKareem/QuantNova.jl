@@ -2,11 +2,12 @@ using Test
 using Quasar
 
 @testset "Quasar.jl" begin
-    include("Core/test_core.jl")
-    include("AD/test_ad.jl")
-    include("Instruments/test_instruments.jl")
-    include("Portfolio/test_portfolio.jl")
-    include("Risk/test_risk.jl")
-    include("Optimization/test_optimization.jl")
-    include("integration/test_full_pipeline.jl")
+    include("core.jl")
+    include("ad.jl")
+    include("instruments.jl")
+    include("portfolio.jl")
+    include("risk.jl")
+    include("optimization.jl")
+    include("calibration.jl")
+    include("full_pipeline.jl")
 end
