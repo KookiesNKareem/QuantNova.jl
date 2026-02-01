@@ -16,16 +16,16 @@ hero:
 
 <div class="metrics-bar">
   <div class="metric">
-    <span class="number">0</span>
-    <span class="label">Formulas to Derive</span>
-  </div>
-  <div class="metric">
-    <span class="number">3</span>
-    <span class="label">Lines to Price Options</span>
+    <span class="number">8-139x</span>
+    <span class="label">Faster than QuantLib C++</span>
   </div>
   <div class="metric">
     <span class="number">4</span>
     <span class="label">AD Backends</span>
+  </div>
+  <div class="metric">
+    <span class="number">100%</span>
+    <span class="label">Differentiable</span>
   </div>
   <div class="metric">
     <span class="number">100%</span>

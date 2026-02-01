@@ -10,6 +10,20 @@
 
 A differentiable quantitative finance library for Julia.
 
+## Performance
+
+Nova.jl vs [QuantLib](https://www.quantlib.org/) C++ (v1.41):
+
+| Benchmark | Nova.jl | QuantLib C++ | |
+|-----------|---------|--------------|---------|
+| European option pricing | 0.04 μs | 5.7 μs | **139x faster** |
+| Greeks (all 5) | 0.08 μs | 5.7 μs | **69x faster** |
+| American option (100-step binomial) | 8.4 μs | 67 μs | **8x faster** |
+
+*Benchmarks on Apple M1. See `benchmarks/comparison/` for methodology.*
+
+**Why the difference?** QuantLib builds a reusable object graph (`Handle`, `Quote`, `PricingEngine`) per instrument—powerful for complex multi-leg structures. Nova compiles specialized native code per call via Julia's JIT. The American option benchmark (8x) reflects pure algorithmic performance; European/Greeks benchmarks also capture the object construction difference.
+
 ## Features
 
 - **Differentiable by default**: Every computation flows through a unified AD system. Gradients are first-class outputs.

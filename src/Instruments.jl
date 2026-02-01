@@ -203,28 +203,49 @@ function american_binomial(S, K, T, r, σ, optiontype::Symbol, nsteps::Int)
     dt = T / nsteps
     u = exp(σ * sqrt(dt))
     d = 1 / u
-    p = (exp(r * dt) - d) / (u - d)
-    df = exp(-r * dt)
+    disc = exp(-r * dt)
+    p = (1 / disc - d) / (u - d)
+
+    dfp = disc * p
+    dfq = disc * (1 - p)
+    ud = u / d
+
+    values = Vector{Float64}(undef, nsteps + 1)
+    Sdn = S * d^nsteps
 
     # Terminal payoffs
-    prices = [S * u^j * d^(nsteps - j) for j in 0:nsteps]
-    if optiontype == :call
-        values = [max(p - K, 0.0) for p in prices]
+    @inbounds if optiontype == :call
+        Sj = Sdn
+        for j in 0:nsteps
+            values[j+1] = max(Sj - K, 0.0)
+            Sj *= ud
+        end
     else
-        values = [max(K - p, 0.0) for p in prices]
+        Sj = Sdn
+        for j in 0:nsteps
+            values[j+1] = max(K - Sj, 0.0)
+            Sj *= ud
+        end
     end
 
-    # Backward induction with early exercise check
-    for i in (nsteps-1):-1:0
-        for j in 0:i
-            stock_price = S * u^j * d^(i - j)
-            hold_value = df * (p * values[j+2] + (1 - p) * values[j+1])
-            if optiontype == :call
-                exercise_value = max(stock_price - K, 0.0)
-            else
-                exercise_value = max(K - stock_price, 0.0)
+    # Backward induction
+    @inbounds if optiontype == :call
+        for i in (nsteps-1):-1:0
+            Sj = S * d^i
+            for j in 0:i
+                hold = dfp * values[j+2] + dfq * values[j+1]
+                values[j+1] = max(hold, max(Sj - K, 0.0))
+                Sj *= ud
             end
-            values[j+1] = max(hold_value, exercise_value)
+        end
+    else
+        for i in (nsteps-1):-1:0
+            Sj = S * d^i
+            for j in 0:i
+                hold = dfp * values[j+2] + dfq * values[j+1]
+                values[j+1] = max(hold, max(K - Sj, 0.0))
+                Sj *= ud
+            end
         end
     end
 
