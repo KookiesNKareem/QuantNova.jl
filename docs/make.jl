@@ -9,7 +9,7 @@ makedocs(;
     authors="Kareem Fareed",
     sitename="Nova.jl",
     format=DocumenterVitepress.MarkdownVitepress(
-        repo="github.com/KookiesNKareem/Nova.jl",
+        repo="github.com/KookiesNKareem/Nova",
         devbranch="main",
         devurl="dev",
         build_vitepress=false,  # Don't use JLL Node.js - we'll build manually
