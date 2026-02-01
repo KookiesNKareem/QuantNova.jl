@@ -132,7 +132,10 @@ include("Backtesting.jl")
 using .Backtesting
 export AbstractStrategy, generate_orders, should_rebalance
 export BuyAndHoldStrategy, RebalancingStrategy
+export VolatilityTargetStrategy, estimate_ewma_volatility
 export BacktestResult, backtest, compute_backtest_metrics
+export WalkForwardConfig, WalkForwardPeriod, WalkForwardResult
+export walk_forward_backtest, compute_extended_metrics
 
 # Scenario Analysis
 include("ScenarioAnalysis.jl")

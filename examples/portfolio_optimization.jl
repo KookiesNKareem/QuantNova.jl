@@ -10,6 +10,7 @@ using QuantNova
 using Statistics
 using Dates
 using Printf
+using LinearAlgebra
 
 # ============================================================================
 # Configuration
@@ -255,6 +256,109 @@ function main()
         bar = repeat("█", round(Int, contrib_pct * 0.4))
         @printf("    %-6s %5.1f%% %s\n", sym, contrib_pct, bar)
     end
+
+    # -------------------------------------------------------------------------
+    # Step 8: Walk-Forward Analysis
+    # -------------------------------------------------------------------------
+    print_header("Step 8: Walk-Forward Backtesting")
+
+    println("Running walk-forward with 6-month train / 1-month test windows...")
+    println()
+
+    # Full data for walk-forward
+    full_timestamps, full_prices = to_backtest_format(histories)
+
+    # Optimizer function for walk-forward
+    function wf_optimizer(train_returns, syms)
+        Σ = cov(train_returns)
+        Σ = Σ + 1e-6 * I  # Regularization
+        result = optimize(MinimumVariance(Σ))
+        return Dict(Symbol(syms[i]) => result.weights[i] for i in eachindex(syms))
+    end
+
+    wf_config = WalkForwardConfig(
+        train_period=126,   # 6 months
+        test_period=21,     # 1 month
+        expanding=false
+    )
+
+    wf_result = walk_forward_backtest(
+        wf_optimizer,
+        SYMBOLS,
+        full_timestamps,
+        full_prices,
+        config=wf_config,
+        initial_cash=INITIAL_CAPITAL
+    )
+
+    wf_m = wf_result.metrics
+    println("Walk-Forward Results (", Int(wf_m[:n_periods]), " periods):")
+    println()
+    println("  Combined Performance:")
+    @printf("    Total Return:       %+.2f%%\n", wf_m[:total_return] * 100)
+    @printf("    Annualized Return:  %+.2f%%\n", wf_m[:annualized_return] * 100)
+    @printf("    Volatility:         %.2f%%\n", wf_m[:volatility] * 100)
+    @printf("    Sharpe Ratio:       %.3f\n", wf_m[:sharpe_ratio])
+    @printf("    Max Drawdown:       %.2f%%\n", wf_m[:max_drawdown] * 100)
+    println()
+    println("  Period Statistics:")
+    @printf("    Period Win Rate:    %.1f%%\n", wf_m[:period_win_rate] * 100)
+    @printf("    Avg Period Return:  %+.2f%%\n", wf_m[:avg_period_return] * 100)
+    @printf("    Period Return Std:  %.2f%%\n", wf_m[:period_return_std] * 100)
+
+    # -------------------------------------------------------------------------
+    # Step 9: Volatility Targeting
+    # -------------------------------------------------------------------------
+    print_header("Step 9: Volatility Targeting Comparison")
+
+    # Use first half for comparison
+    test_timestamps = histories[1].timestamps[split_idx+1:end]
+    test_data = Dict{Symbol,Vector{Float64}}()
+    for ph in histories
+        test_data[Symbol(ph.symbol)] = ph.close[split_idx+1:end]
+    end
+
+    mv_target = Dict(Symbol(SYMBOLS[i]) => mv_result.weights[i] for i in eachindex(SYMBOLS))
+
+    # Base strategy - monthly rebalancing
+    base_strat = RebalancingStrategy(
+        target_weights=mv_target,
+        rebalance_frequency=:monthly,
+        tolerance=0.05
+    )
+    base_result = backtest(base_strat, test_timestamps, test_data, initial_cash=INITIAL_CAPITAL)
+
+    # Vol-targeted (15% target) with rebalancing
+    vol_strat = VolatilityTargetStrategy(
+        RebalancingStrategy(
+            target_weights=mv_target,
+            rebalance_frequency=:monthly,
+            tolerance=0.05
+        ),
+        target_vol=0.15,
+        max_leverage=1.0,
+        min_leverage=0.3,
+        lookback=20
+    )
+    vol_result = backtest(vol_strat, test_timestamps, test_data, initial_cash=INITIAL_CAPITAL)
+
+    println("Comparison (Min-Variance weights):\n")
+    println("-" ^ 50)
+    @printf("%-20s %12s %12s\n", "Metric", "Base", "Vol Target")
+    println("-" ^ 50)
+    @printf("%-20s %11.2f%% %11.2f%%\n", "Return",
+            base_result.metrics[:total_return] * 100,
+            vol_result.metrics[:total_return] * 100)
+    @printf("%-20s %11.2f%% %11.2f%%\n", "Realized Vol",
+            base_result.metrics[:volatility] * 100,
+            vol_result.metrics[:volatility] * 100)
+    @printf("%-20s %12.3f %12.3f\n", "Sharpe Ratio",
+            base_result.metrics[:sharpe_ratio],
+            vol_result.metrics[:sharpe_ratio])
+    @printf("%-20s %11.2f%% %11.2f%%\n", "Max Drawdown",
+            base_result.metrics[:max_drawdown] * 100,
+            vol_result.metrics[:max_drawdown] * 100)
+    println("-" ^ 50)
 
     # -------------------------------------------------------------------------
     # Summary

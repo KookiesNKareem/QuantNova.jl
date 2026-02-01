@@ -203,6 +203,85 @@ const RUN_LIVE_TESTS = get(ENV, "QUANTNOVA_TEST_LIVE_DATA", "0") == "1"
             @test haskey(bt_result.metrics, :sharpe_ratio)
         end
 
+        @testset "Walk-Forward Backtesting" begin
+            histories = fetch_multiple(["AAPL", "MSFT", "GOOGL"], range="2y")
+            timestamps, prices = to_backtest_format(histories)
+            symbols = ["AAPL", "MSFT", "GOOGL"]
+
+            # Simple equal-weight optimizer
+            function equal_weight_optimizer(train_returns, syms)
+                n = length(syms)
+                return Dict(Symbol(syms[i]) => 1.0/n for i in eachindex(syms))
+            end
+
+            config = WalkForwardConfig(
+                train_period=126,
+                test_period=21,
+                expanding=false
+            )
+
+            result = walk_forward_backtest(
+                equal_weight_optimizer,
+                symbols,
+                timestamps,
+                prices,
+                config=config
+            )
+
+            @test result isa WalkForwardResult
+            @test length(result.periods) > 0
+            @test result.metrics[:n_periods] > 0
+            @test haskey(result.metrics, :period_win_rate)
+            @test haskey(result.metrics, :avg_period_return)
+            @test length(result.combined_equity_curve) > 0
+        end
+
+        @testset "Volatility Targeting" begin
+            histories = fetch_multiple(["AAPL", "MSFT"], range="1y")
+            timestamps, prices = to_backtest_format(histories)
+
+            target = Dict(:AAPL => 0.5, :MSFT => 0.5)
+
+            # Base strategy
+            base = RebalancingStrategy(
+                target_weights=target,
+                rebalance_frequency=:monthly,
+                tolerance=0.05
+            )
+
+            # Vol-targeted strategy
+            vol_strategy = VolatilityTargetStrategy(
+                RebalancingStrategy(
+                    target_weights=target,
+                    rebalance_frequency=:monthly,
+                    tolerance=0.05
+                ),
+                target_vol=0.15,
+                max_leverage=1.0,
+                lookback=20
+            )
+
+            result_base = backtest(base, timestamps, prices, initial_cash=100_000.0)
+            result_vol = backtest(vol_strategy, timestamps, prices, initial_cash=100_000.0)
+
+            @test result_base.final_value > 0
+            @test result_vol.final_value > 0
+            @test length(result_vol.trades) >= length(result_base.trades) - 5  # May have similar or more trades
+        end
+
+        @testset "Extended Metrics" begin
+            rets = fetch_returns("AAPL", range="1y")
+
+            metrics = compute_extended_metrics(rets, rf=0.05)
+
+            @test haskey(metrics, :sharpe_ratio)
+            @test haskey(metrics, :sortino_ratio)
+            @test haskey(metrics, :skewness)
+            @test haskey(metrics, :kurtosis)
+            @test haskey(metrics, :profit_factor)
+            @test haskey(metrics, :tail_ratio)
+        end
+
 end  # testset
 
 # Note: To run this file directly with live tests enabled:
