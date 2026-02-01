@@ -1,13 +1,13 @@
 # Quick Start
 
-This guide covers the core concepts of SuperNova in 5 minutes.
+This guide covers the core concepts of QuantNova in 5 minutes.
 
 ## Market State
 
-SuperNova separates instruments from market data. A `MarketState` holds current prices, rates, and volatilities:
+QuantNova separates instruments from market data. A `MarketState` holds current prices, rates, and volatilities:
 
 ```julia
-using SuperNova
+using QuantNova
 
 state = MarketState(
     prices = Dict("AAPL" => 150.0, "GOOGL" => 140.0),
@@ -95,7 +95,7 @@ Compute Monte Carlo Greeks using automatic differentiation:
 
 ```julia
 using Enzyme
-using SuperNova
+using QuantNova
 
 dynamics = GBMDynamics(0.05, 0.2)
 payoff = EuropeanCall(100.0)

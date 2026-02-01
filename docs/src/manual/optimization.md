@@ -1,6 +1,6 @@
 # Portfolio Optimization
 
-SuperNova provides differentiable portfolio optimization with multiple objective functions.
+QuantNova provides differentiable portfolio optimization with multiple objective functions.
 
 ## Objectives
 
@@ -60,7 +60,7 @@ Optimization uses the current AD backend for gradient computation:
 
 ```julia
 using Enzyme
-using SuperNova
+using QuantNova
 
 # Use Enzyme for faster gradients on large portfolios
 with_backend(EnzymeBackend()) do
@@ -91,7 +91,7 @@ H = hessian(f, w0; backend=EnzymeBackend())
 
 ## Model Calibration
 
-SuperNova also supports model calibration using AD-powered optimization.
+QuantNova also supports model calibration using AD-powered optimization.
 
 ### SABR Calibration
 

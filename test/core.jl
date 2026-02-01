@@ -1,5 +1,5 @@
 using Test
-using SuperNova
+using QuantNova
 
 @testset "Core Abstract Types" begin
     @testset "Type hierarchy exists" begin
@@ -90,7 +90,7 @@ end
 end
 
 @testset "ImmutableDict" begin
-    d = SuperNova.Core.ImmutableDict(Dict("a" => 1, "b" => 2))
+    d = QuantNova.Core.ImmutableDict(Dict("a" => 1, "b" => 2))
 
     # Reading works
     @test d["a"] == 1

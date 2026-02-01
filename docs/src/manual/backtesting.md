@@ -5,7 +5,7 @@ Run historical backtests with customizable strategies.
 ## Quick Start
 
 ```julia
-using SuperNova
+using QuantNova
 using Dates
 
 # Define strategy
@@ -59,7 +59,7 @@ struct MomentumStrategy <: AbstractStrategy
     # ... fields
 end
 
-function SuperNova.generate_orders(s::MomentumStrategy, state::SimulationState)
+function QuantNova.generate_orders(s::MomentumStrategy, state::SimulationState)
     # Your logic here
     return orders
 end

@@ -1,8 +1,8 @@
-module SuperNovaEnzymeExt
+module QuantNovaEnzymeExt
 
-using SuperNova
-using SuperNova.AD: EnzymeBackend, _gradient, _hessian, _jacobian, _value_and_gradient
-using SuperNova.Core: ADBackend
+using QuantNova
+using QuantNova.AD: EnzymeBackend, _gradient, _hessian, _jacobian, _value_and_gradient
+using QuantNova.Core: ADBackend
 
 using Enzyme
 
@@ -12,7 +12,7 @@ using Enzyme
 
 # TODO: Add in-place gradient for memory efficiency
 # TODO: Add batch differentiation support
-function SuperNova.AD._gradient(b::EnzymeBackend, f, x)
+function QuantNova.AD._gradient(b::EnzymeBackend, f, x)
     if b.mode == :reverse
         dx = zero(x)
         Enzyme.autodiff(Enzyme.Reverse, f, Enzyme.Active, Enzyme.Duplicated(x, dx))
@@ -31,7 +31,7 @@ function SuperNova.AD._gradient(b::EnzymeBackend, f, x)
     end
 end
 
-function SuperNova.AD._hessian(::EnzymeBackend, f, x)
+function QuantNova.AD._hessian(::EnzymeBackend, f, x)
     n = length(x)
     H = zeros(eltype(x), n, n)
     for i in 1:n
@@ -48,7 +48,7 @@ function SuperNova.AD._hessian(::EnzymeBackend, f, x)
     return H
 end
 
-function SuperNova.AD._jacobian(::EnzymeBackend, f, x)
+function QuantNova.AD._jacobian(::EnzymeBackend, f, x)
     y0 = f(x)
     m = length(y0)
     n = length(x)
@@ -62,7 +62,7 @@ function SuperNova.AD._jacobian(::EnzymeBackend, f, x)
     return J
 end
 
-function SuperNova.AD._value_and_gradient(::EnzymeBackend, f, x)
+function QuantNova.AD._value_and_gradient(::EnzymeBackend, f, x)
     dx = zero(x)
     _, val = Enzyme.autodiff(Enzyme.ReverseWithPrimal, f, Enzyme.Active, Enzyme.Duplicated(x, dx))
     return (val, dx)

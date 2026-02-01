@@ -1,5 +1,5 @@
 using Test
-using SuperNova
+using QuantNova
 
 @testset "Portfolio" begin
     @testset "Construction" begin

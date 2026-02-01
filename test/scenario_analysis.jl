@@ -1,5 +1,5 @@
 using Test
-using SuperNova
+using QuantNova
 using Dates
 using Statistics: std
 
@@ -276,7 +276,7 @@ using Statistics: std
     end
 
     @testset "Differentiable Scenario Analysis" begin
-        using SuperNova: gradient, ForwardDiffBackend
+        using QuantNova: gradient, ForwardDiffBackend
 
         state = SimulationState(
             timestamp=DateTime(2024, 1, 1),

@@ -1,5 +1,5 @@
 using Test
-using SuperNova
+using QuantNova
 using Statistics
 using Random
 
@@ -54,7 +54,7 @@ using Random
         # User-defined risk measure
         struct DownsideVol <: AbstractRiskMeasure end
 
-        function SuperNova.compute(::DownsideVol, returns)
+        function QuantNova.compute(::DownsideVol, returns)
             negative_returns = filter(r -> r < 0, returns)
             return std(negative_returns)
         end

@@ -1,8 +1,8 @@
-module SuperNovaReactantExt
+module QuantNovaReactantExt
 
-using SuperNova
-using SuperNova.AD: ReactantBackend, _gradient, _hessian, _jacobian, _value_and_gradient
-using SuperNova.Core: ADBackend
+using QuantNova
+using QuantNova.AD: ReactantBackend, _gradient, _hessian, _jacobian, _value_and_gradient
+using QuantNova.Core: ADBackend
 
 using Reactant
 using Enzyme
@@ -31,7 +31,7 @@ using Enzyme
 
 # TODO: Add function caching to avoid recompilation on repeated calls
 # TODO: Add error handling for compilation failures with useful messages
-function SuperNova.AD._gradient(::ReactantBackend, f, x)
+function QuantNova.AD._gradient(::ReactantBackend, f, x)
     x_react = x isa Reactant.ConcreteRArray ? x : Reactant.ConcreteRArray(x)
 
     # Define gradient function using Enzyme
@@ -48,7 +48,7 @@ function SuperNova.AD._gradient(::ReactantBackend, f, x)
     return Array(result)
 end
 
-function SuperNova.AD._value_and_gradient(::ReactantBackend, f, x)
+function QuantNova.AD._value_and_gradient(::ReactantBackend, f, x)
     x_react = x isa Reactant.ConcreteRArray ? x : Reactant.ConcreteRArray(x)
 
     # Define function that returns both value and gradient
@@ -67,7 +67,7 @@ function SuperNova.AD._value_and_gradient(::ReactantBackend, f, x)
     return (val_out, Array(grad_result))
 end
 
-function SuperNova.AD._hessian(::ReactantBackend, f, x)
+function QuantNova.AD._hessian(::ReactantBackend, f, x)
     # Use Enzyme directly for hessian (nested Reactant compilation is complex)
     n = length(x)
     H = zeros(eltype(x), n, n)
@@ -86,7 +86,7 @@ function SuperNova.AD._hessian(::ReactantBackend, f, x)
     return H
 end
 
-function SuperNova.AD._jacobian(::ReactantBackend, f, x)
+function QuantNova.AD._jacobian(::ReactantBackend, f, x)
     # Use Enzyme directly for jacobian
     y0 = f(x)
     m = length(y0)
@@ -107,10 +107,10 @@ end
 # BatchPricing Pre-compiled Calibration
 # ============================================================================
 
-function _reactant_compile_gpu!(cal::SuperNova.BatchPricing.PrecompiledSABRCalibrator)
+function _reactant_compile_gpu!(cal::QuantNova.BatchPricing.PrecompiledSABRCalibrator)
     F, T, β = cal.F, cal.T, cal.β
     strikes, market_vols, n = cal.strikes, cal.market_vols, cal.n
-    MASK3_1, MASK3_2, MASK3_3 = SuperNova.BatchPricing.MASK3_1, SuperNova.BatchPricing.MASK3_2, SuperNova.BatchPricing.MASK3_3
+    MASK3_1, MASK3_2, MASK3_3 = QuantNova.BatchPricing.MASK3_1, QuantNova.BatchPricing.MASK3_2, QuantNova.BatchPricing.MASK3_3
 
     function loss(params)
         α = abs(sum(params .* MASK3_1))
@@ -118,7 +118,7 @@ function _reactant_compile_gpu!(cal::SuperNova.BatchPricing.PrecompiledSABRCalib
         ν = exp(sum(params .* MASK3_3))
         err = zero(eltype(params))
         for i in 1:n
-            err += (SuperNova.BatchPricing._sabr_vol_gpu(F, strikes[i], T, α, β, ρ, ν) - market_vols[i])^2
+            err += (QuantNova.BatchPricing._sabr_vol_gpu(F, strikes[i], T, α, β, ρ, ν) - market_vols[i])^2
         end
         err / n
     end
@@ -130,18 +130,18 @@ function _reactant_compile_gpu!(cal::SuperNova.BatchPricing.PrecompiledSABRCalib
         dx
     end
     cal.compiled_grad = Reactant.@compile grad_fn(x_react)
-    cal.backend = SuperNova.AD.ReactantBackend()
+    cal.backend = QuantNova.AD.ReactantBackend()
     cal
 end
 
-function _reactant_call_compiled_grad(cal::SuperNova.BatchPricing.PrecompiledSABRCalibrator, x)
+function _reactant_call_compiled_grad(cal::QuantNova.BatchPricing.PrecompiledSABRCalibrator, x)
     Array(cal.compiled_grad(Reactant.ConcreteRArray(x)))
 end
 
 # Register callbacks
 function __init__()
-    SuperNova.BatchPricing._REACTANT_COMPILE_GPU[] = _reactant_compile_gpu!
-    SuperNova.BatchPricing._REACTANT_CALL_GRAD[] = _reactant_call_compiled_grad
+    QuantNova.BatchPricing._REACTANT_COMPILE_GPU[] = _reactant_compile_gpu!
+    QuantNova.BatchPricing._REACTANT_CALL_GRAD[] = _reactant_call_compiled_grad
 end
 
 end # module

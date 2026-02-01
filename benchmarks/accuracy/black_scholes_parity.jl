@@ -1,7 +1,7 @@
 # Black-Scholes / Black-76 Accuracy Benchmark
 # Tests put-call parity and analytical accuracy
 
-using SuperNova
+using QuantNova
 using Printf
 using Distributions: Normal, cdf
 

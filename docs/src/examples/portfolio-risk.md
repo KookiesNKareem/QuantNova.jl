@@ -5,7 +5,7 @@ This example demonstrates building and analyzing a portfolio of options, computi
 ## Setup
 
 ```julia
-using SuperNova
+using QuantNova
 using Statistics
 ```
 

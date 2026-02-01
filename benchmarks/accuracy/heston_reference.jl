@@ -3,7 +3,7 @@
 #
 # Reference: Heston (1993), Gatheral "The Volatility Surface"
 
-using SuperNova
+using QuantNova
 using Printf
 
 """

@@ -1,15 +1,15 @@
-using SuperNova
+using QuantNova
 using Documenter
 using DocumenterVitepress
 
-DocMeta.setdocmeta!(SuperNova, :DocTestSetup, :(using SuperNova); recursive=true)
+DocMeta.setdocmeta!(QuantNova, :DocTestSetup, :(using QuantNova); recursive=true)
 
 makedocs(;
-    modules=[SuperNova],
+    modules=[QuantNova],
     authors="Kareem Fareed",
-    sitename="SuperNova.jl",
+    sitename="QuantNova.jl",
     format=DocumenterVitepress.MarkdownVitepress(
-        repo="github.com/KookiesNKareem/SuperNova.jl",
+        repo="github.com/KookiesNKareem/QuantNova.jl",
         devbranch="main",
         devurl="dev",
         build_vitepress=false,  # Don't use JLL Node.js - we'll build manually

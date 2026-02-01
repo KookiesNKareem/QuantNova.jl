@@ -1,5 +1,5 @@
 using Test
-using SuperNova
+using QuantNova
 
 @testset "AD Backend System" begin
     @testset "Backend types exist" begin

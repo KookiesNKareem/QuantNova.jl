@@ -1,5 +1,5 @@
 using Test
-using SuperNova
+using QuantNova
 using LinearAlgebra
 
 @testset "Optimization" begin

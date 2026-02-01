@@ -1,4 +1,4 @@
-module SuperNova
+module QuantNova
 
 # TODO: Add precompilation workloads for faster load times
 # TODO: Consider SnoopCompile for latency analysis

@@ -1,6 +1,6 @@
 # Interest Rates
 
-SuperNova provides a comprehensive interest rate modeling framework including yield curves, bonds, short-rate models, and interest rate derivatives.
+QuantNova provides a comprehensive interest rate modeling framework including yield curves, bonds, short-rate models, and interest rate derivatives.
 
 ## Yield Curves
 
@@ -9,7 +9,7 @@ SuperNova provides a comprehensive interest rate modeling framework including yi
 Three curve representations are available, all convertible to each other:
 
 ```julia
-using SuperNova
+using QuantNova
 
 # Discount curve - stores discount factors directly
 dc = DiscountCurve([0.0, 1.0, 2.0, 5.0], [1.0, 0.95, 0.90, 0.78])
@@ -234,7 +234,7 @@ swaption = Swaption(1.0, 6.0, 0.05, true, 4, 1_000_000.0)  # Quarterly, $1M noti
 ## Example: Building a Rate Curve and Pricing
 
 ```julia
-using SuperNova
+using QuantNova
 
 # Bootstrap curve from market data
 instruments = [
