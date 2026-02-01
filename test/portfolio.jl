@@ -1,5 +1,5 @@
 using Test
-using Quasar
+using Nova
 
 @testset "Portfolio" begin
     @testset "Construction" begin

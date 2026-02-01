@@ -1,9 +1,9 @@
 using Test
-using Quasar
-using Quasar.InterestRates
+using Nova
+using Nova.InterestRates
 
 # Use module-qualified price to avoid collision with Instruments.price
-const ir_price = Quasar.InterestRates.price
+const ir_price = Nova.InterestRates.price
 
 @testset "Interest Rates" begin
 
@@ -282,7 +282,7 @@ const ir_price = Quasar.InterestRates.price
             rate = 0.05
 
             # Should have 10 cash flows
-            cfs = Quasar.InterestRates.cash_flows(bond)
+            cfs = Nova.InterestRates.cash_flows(bond)
             @test length(cfs) == 10
             @test cfs[1][2] ≈ 2.0  # First coupon
             @test cfs[end][2] ≈ 102.0  # Last coupon + principal
@@ -410,7 +410,7 @@ const ir_price = Quasar.InterestRates.price
             floor = Floor(3.0, strike, 4, 1e6)
 
             cap_price = black_cap(cap, curve, vol)
-            floor_price = Quasar.InterestRates.black_floor(floor, curve, vol)
+            floor_price = Nova.InterestRates.black_floor(floor, curve, vol)
 
             # Cap - Floor = Swap value (approximately)
             # For ATM, swap ≈ 0, so cap ≈ floor

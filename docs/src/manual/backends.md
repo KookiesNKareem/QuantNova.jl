@@ -1,6 +1,6 @@
 # AD Backends
 
-Quasar provides a flexible automatic differentiation (AD) backend system that allows you to choose the best differentiation engine for your use case. All backends provide the same API, making it easy to switch between them.
+Nova provides a flexible automatic differentiation (AD) backend system that allows you to choose the best differentiation engine for your use case. All backends provide the same API, making it easy to switch between them.
 
 ## Available Backends
 
@@ -14,7 +14,7 @@ Quasar provides a flexible automatic differentiation (AD) backend system that al
 ## Quick Start
 
 ```julia
-using Quasar
+using Nova
 
 # Default backend (ForwardDiff)
 f(x) = sum(x.^2)
@@ -64,7 +64,7 @@ end
 The default backend using forward-mode AD with dual numbers.
 
 ```julia
-using Quasar
+using Nova
 
 gradient(f, x; backend=ForwardDiffBackend())
 ```
@@ -107,7 +107,7 @@ LLVM-based AD that works at the compiler level.
 
 ```julia
 using Enzyme  # Must load Enzyme first
-using Quasar
+using Nova
 
 gradient(f, x; backend=EnzymeBackend())
 
@@ -148,7 +148,7 @@ XLA-based compilation for GPU acceleration.
 
 ```julia
 using Reactant  # Must load Reactant first
-using Quasar
+using Nova
 
 gradient(f, x; backend=ReactantBackend())
 ```
@@ -214,11 +214,11 @@ enable_gpu!(:reactant)  # Force Reactant
 
 ## Monte Carlo Greeks
 
-Monte Carlo Greeks require special handling because standard RNGs are not differentiable. Quasar automatically uses Quasi-Monte Carlo (Sobol sequences) when using Enzyme:
+Monte Carlo Greeks require special handling because standard RNGs are not differentiable. Nova automatically uses Quasi-Monte Carlo (Sobol sequences) when using Enzyme:
 
 ```julia
 using Enzyme
-using Quasar
+using Nova
 
 S0, K, T, r, sigma = 100.0, 100.0, 1.0, 0.05, 0.2
 dynamics = GBMDynamics(r, sigma)
@@ -266,7 +266,7 @@ Typical performance characteristics (varies by problem):
 ```julia
 # Load Enzyme before using EnzymeBackend
 using Enzyme
-using Quasar
+using Nova
 
 gradient(f, x; backend=EnzymeBackend())  # Now works
 ```
@@ -275,7 +275,7 @@ gradient(f, x; backend=EnzymeBackend())  # Now works
 
 ```julia
 using Reactant
-using Quasar
+using Nova
 
 gradient(f, x; backend=ReactantBackend())  # Now works
 ```

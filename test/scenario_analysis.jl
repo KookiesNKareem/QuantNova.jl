@@ -1,5 +1,5 @@
 using Test
-using Quasar
+using Nova
 using Dates
 using Statistics: std
 
@@ -276,7 +276,7 @@ using Statistics: std
     end
 
     @testset "Differentiable Scenario Analysis" begin
-        using Quasar: gradient, ForwardDiffBackend
+        using Nova: gradient, ForwardDiffBackend
 
         state = SimulationState(
             timestamp=DateTime(2024, 1, 1),

@@ -1,5 +1,5 @@
 using Test
-using Quasar
+using Nova
 
 @testset "AD Backend System" begin
     @testset "Backend types exist" begin

@@ -1,6 +1,6 @@
 # Portfolio Optimization
 
-Quasar provides differentiable portfolio optimization with multiple objective functions.
+Nova provides differentiable portfolio optimization with multiple objective functions.
 
 ## Objectives
 
@@ -60,7 +60,7 @@ Optimization uses the current AD backend for gradient computation:
 
 ```julia
 using Enzyme
-using Quasar
+using Nova
 
 # Use Enzyme for faster gradients on large portfolios
 with_backend(EnzymeBackend()) do
@@ -91,7 +91,7 @@ H = hessian(f, w0; backend=EnzymeBackend())
 
 ## Model Calibration
 
-Quasar also supports model calibration using AD-powered optimization.
+Nova also supports model calibration using AD-powered optimization.
 
 ### SABR Calibration
 

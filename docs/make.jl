@@ -1,15 +1,15 @@
-using Quasar
+using Nova
 using Documenter
 using DocumenterVitepress
 
-DocMeta.setdocmeta!(Quasar, :DocTestSetup, :(using Quasar); recursive=true)
+DocMeta.setdocmeta!(Nova, :DocTestSetup, :(using Nova); recursive=true)
 
 makedocs(;
-    modules=[Quasar],
+    modules=[Nova],
     authors="Kareem Fareed",
-    sitename="Quasar.jl",
+    sitename="Nova.jl",
     format=DocumenterVitepress.MarkdownVitepress(
-        repo="github.com/KookiesNKareem/Quasar.jl",
+        repo="github.com/KookiesNKareem/Nova.jl",
         devbranch="main",
         devurl="dev",
         build_vitepress=false,  # Don't use JLL Node.js - we'll build manually

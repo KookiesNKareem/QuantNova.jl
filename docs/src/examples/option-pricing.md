@@ -5,7 +5,7 @@ This example demonstrates the complete workflow for pricing European options and
 ## Setup
 
 ```julia
-using Quasar
+using Nova
 ```
 
 ## Black-Scholes Pricing
@@ -249,7 +249,7 @@ Strike | True Vol | Market Price | Implied Vol
 
 ## Edge Cases
 
-Quasar handles edge cases gracefully:
+Nova handles edge cases gracefully:
 
 ```julia
 # At expiry (T = 0)

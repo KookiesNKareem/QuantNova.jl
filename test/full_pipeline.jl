@@ -1,5 +1,5 @@
 using Test
-using Quasar
+using Nova
 using Statistics
 
 @testset "Full Pipeline Integration" begin

@@ -1,8 +1,8 @@
-module QuasarEnzymeExt
+module NovaEnzymeExt
 
-using Quasar
-using Quasar.AD: EnzymeBackend, _gradient, _hessian, _jacobian, _value_and_gradient
-using Quasar.Core: ADBackend
+using Nova
+using Nova.AD: EnzymeBackend, _gradient, _hessian, _jacobian, _value_and_gradient
+using Nova.Core: ADBackend
 
 using Enzyme
 
@@ -12,7 +12,7 @@ using Enzyme
 
 # TODO: Add in-place gradient for memory efficiency
 # TODO: Add batch differentiation support
-function Quasar.AD._gradient(b::EnzymeBackend, f, x)
+function Nova.AD._gradient(b::EnzymeBackend, f, x)
     if b.mode == :reverse
         dx = zero(x)
         Enzyme.autodiff(Enzyme.Reverse, f, Enzyme.Active, Enzyme.Duplicated(x, dx))
@@ -31,7 +31,7 @@ function Quasar.AD._gradient(b::EnzymeBackend, f, x)
     end
 end
 
-function Quasar.AD._hessian(::EnzymeBackend, f, x)
+function Nova.AD._hessian(::EnzymeBackend, f, x)
     n = length(x)
     H = zeros(eltype(x), n, n)
     for i in 1:n
@@ -48,7 +48,7 @@ function Quasar.AD._hessian(::EnzymeBackend, f, x)
     return H
 end
 
-function Quasar.AD._jacobian(::EnzymeBackend, f, x)
+function Nova.AD._jacobian(::EnzymeBackend, f, x)
     y0 = f(x)
     m = length(y0)
     n = length(x)
@@ -62,7 +62,7 @@ function Quasar.AD._jacobian(::EnzymeBackend, f, x)
     return J
 end
 
-function Quasar.AD._value_and_gradient(::EnzymeBackend, f, x)
+function Nova.AD._value_and_gradient(::EnzymeBackend, f, x)
     dx = zero(x)
     _, val = Enzyme.autodiff(Enzyme.ReverseWithPrimal, f, Enzyme.Active, Enzyme.Duplicated(x, dx))
     return (val, dx)

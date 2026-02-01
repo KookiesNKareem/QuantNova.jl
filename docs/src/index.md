@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: Quasar.jl
+  name: Nova.jl
   text: Differentiable Quantitative Finance
   tagline: High-performance derivatives pricing with automatic differentiation
   actions:
@@ -11,13 +11,13 @@ hero:
       link: /getting-started/installation
     - theme: alt
       text: View on GitHub
-      link: https://github.com/KookiesNKareem/Quasar.jl
+      link: https://github.com/KookiesNKareem/Nova.jl
 ---
 
 <div class="metrics-bar">
   <div class="metric">
-    <span class="number">10x</span>
-    <span class="label">Faster Greeks via AD</span>
+    <span class="number">0</span>
+    <span class="label">Formulas to Derive</span>
   </div>
   <div class="metric">
     <span class="number">3</span>
@@ -39,7 +39,7 @@ hero:
 <div class="code-input">
 
 ```julia
-using Quasar
+using Nova
 S0, K, T, r, σ = 100.0, 100.0, 1.0, 0.05, 0.2
 price = black_scholes(S0, K, T, r, σ, :call)
 ```

@@ -1,11 +1,11 @@
 #!/usr/bin/env julia
-# Quasar Benchmark Suite
+# Nova Benchmark Suite
 # Entry point for running accuracy and performance benchmarks
 
 using Pkg
 Pkg.activate(joinpath(@__DIR__, ".."))
 
-# Try to load Reactant for GPU benchmarks (must be before Quasar)
+# Try to load Reactant for GPU benchmarks (must be before Nova)
 try
     @eval using Reactant
     @info "Reactant loaded for GPU benchmarks"
@@ -13,7 +13,7 @@ catch
     @info "Reactant not available, GPU benchmarks will be skipped"
 end
 
-using Quasar
+using Nova
 using Printf
 
 # Include benchmark modules
@@ -28,7 +28,7 @@ include("performance/calibration_timing.jl")
 function print_header()
     println()
     println("=" ^ 70)
-    println("                    QUASAR BENCHMARK SUITE")
+    println("                    NOVA BENCHMARK SUITE")
     println("=" ^ 70)
     println()
 end

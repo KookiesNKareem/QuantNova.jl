@@ -1,13 +1,13 @@
 # Quick Start
 
-This guide covers the core concepts of Quasar in 5 minutes.
+This guide covers the core concepts of Nova in 5 minutes.
 
 ## Market State
 
-Quasar separates instruments from market data. A `MarketState` holds current prices, rates, and volatilities:
+Nova separates instruments from market data. A `MarketState` holds current prices, rates, and volatilities:
 
 ```julia
-using Quasar
+using Nova
 
 state = MarketState(
     prices = Dict("AAPL" => 150.0, "GOOGL" => 140.0),
@@ -95,7 +95,7 @@ Compute Monte Carlo Greeks using automatic differentiation:
 
 ```julia
 using Enzyme
-using Quasar
+using Nova
 
 dynamics = GBMDynamics(0.05, 0.2)
 payoff = EuropeanCall(100.0)

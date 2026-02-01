@@ -9,7 +9,7 @@
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/KookiesNKareem/Quasar.jl")
+Pkg.add(url="https://github.com/KookiesNKareem/Nova.jl")
 ```
 
 ## With GPU Backends
@@ -21,7 +21,7 @@ using Pkg
 Pkg.add("Enzyme")
 
 using Enzyme
-using Quasar
+using Nova
 set_backend!(EnzymeBackend())
 ```
 
@@ -32,14 +32,14 @@ using Pkg
 Pkg.add("Reactant")
 
 using Reactant
-using Quasar
+using Nova
 set_backend!(ReactantBackend())
 ```
 
 ## Verify Installation
 
 ```julia
-using Quasar
+using Nova
 
 # Test basic pricing
 price = black_scholes(100.0, 100.0, 1.0, 0.05, 0.2, :call)

@@ -1,9 +1,9 @@
-# Quasar
+# Nova
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://KookiesNKareem.github.io/Quasar.jl/stable/)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://KookiesNKareem.github.io/Quasar.jl/dev/)
-[![Build Status](https://github.com/KookiesNKareem/Quasar.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/KookiesNKareem/Quasar.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Coverage](https://codecov.io/gh/KookiesNKareem/Quasar.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/KookiesNKareem/Quasar.jl)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://KookiesNKareem.github.io/Nova.jl/stable/)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://KookiesNKareem.github.io/Nova.jl/dev/)
+[![Build Status](https://github.com/KookiesNKareem/Nova.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/KookiesNKareem/Nova.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Coverage](https://codecov.io/gh/KookiesNKareem/Nova.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/KookiesNKareem/Nova.jl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Julia](https://img.shields.io/badge/Julia-1.11+-9558B2.svg?logo=julia)](https://julialang.org/)
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
@@ -21,17 +21,17 @@ A differentiable quantitative finance library for Julia.
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/KookiesNKareem/Quasar.jl")
+Pkg.add(url="https://github.com/KookiesNKareem/Nova.jl")
 ```
 
 ## Quick Start
 
 ### Market State
 
-Quasar separates instruments from market data. A `MarketState` holds current prices, rates, and volatilities:
+Nova separates instruments from market data. A `MarketState` holds current prices, rates, and volatilities:
 
 ```julia
-using Quasar
+using Nova
 
 state = MarketState(
     prices = Dict("AAPL" => 150.0, "GOOGL" => 140.0),
@@ -189,7 +189,7 @@ result = calibrate_heston(surface)
 
 ## AD Backends
 
-Quasar supports multiple automatic differentiation backends with a unified API:
+Nova supports multiple automatic differentiation backends with a unified API:
 
 | Backend | Engine | Best For |
 |---------|--------|----------|
@@ -199,7 +199,7 @@ Quasar supports multiple automatic differentiation backends with a unified API:
 | `ReactantBackend()` | Reactant.jl (XLA) | GPU acceleration |
 
 ```julia
-using Quasar
+using Nova
 
 # Default: ForwardDiff
 gradient(f, x)
@@ -223,18 +223,18 @@ using Reactant  # For ReactantBackend
 
 ### Monte Carlo Greeks with Enzyme
 
-Enzyme can't differentiate through RNGs, so Quasar automatically uses Quasi-Monte Carlo (Sobol sequences):
+Enzyme can't differentiate through RNGs, so Nova automatically uses Quasi-Monte Carlo (Sobol sequences):
 
 ```julia
 using Enzyme
-using Quasar
+using Nova
 
 # This works! Uses QMC internally for Enzyme
 delta = mc_delta(S0, T, payoff, dynamics; backend=EnzymeBackend())
 greeks = mc_greeks(S0, T, payoff, dynamics; backend=EnzymeBackend())
 ```
 
-See [full documentation](https://KookiesNKareem.github.io/Quasar.jl/dev/backends/) for backend details, limitations, and performance tips.
+See [full documentation](https://KookiesNKareem.github.io/Nova.jl/dev/backends/) for backend details, limitations, and performance tips.
 
 ## Type Hierarchy
 
@@ -252,7 +252,7 @@ AbstractInstrument
 
 ## Traits
 
-Quasar uses Julia's Holy Traits pattern for capability dispatch:
+Nova uses Julia's Holy Traits pattern for capability dispatch:
 
 - `Priceable` - Can compute present value given market state
 - `Differentiable` - Participates in AD
