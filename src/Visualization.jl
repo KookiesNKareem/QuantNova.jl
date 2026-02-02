@@ -19,31 +19,39 @@ struct VisualizationSpec{T}
     options::Dict{Symbol,Any}
 end
 
-# Theme definitions
+# Theme definitions - Professional styling
 const LIGHT_THEME = Dict{Symbol,Any}(
-    :backgroundcolor => :white,
-    :textcolor => "#1a1a1a",
-    :gridcolor => "#e0e0e0",
-    :palette => [:steelblue, :coral, :seagreen, :mediumpurple, :goldenrod],
-    :fontsize => 14,
-    :titlesize => 18,
+    :backgroundcolor => "#fafafa",
+    :textcolor => "#2d3748",
+    :gridcolor => "#e2e8f0",
+    :axiscolor => "#cbd5e0",
+    :palette => ["#3182ce", "#e53e3e", "#38a169", "#805ad5", "#dd6b20", "#319795"],
+    :fontsize => 12,
+    :titlesize => 16,
+    :ticksize => 10,
+    :linewidth => 2.0,
+    :spinewidth => 1.0,
 )
 
 const DARK_THEME = Dict{Symbol,Any}(
-    :backgroundcolor => "#0d1117",
-    :textcolor => "#e6edf3",
-    :gridcolor => "#30363d",
-    :palette => ["#58a6ff", "#f97583", "#56d364", "#d2a8ff", "#e3b341"],
-    :fontsize => 14,
-    :titlesize => 18,
+    :backgroundcolor => "#1a1a2e",
+    :textcolor => "#e2e8f0",
+    :gridcolor => "#2d3748",
+    :axiscolor => "#4a5568",
+    :palette => ["#63b3ed", "#fc8181", "#68d391", "#b794f4", "#f6ad55", "#4fd1c5"],
+    :fontsize => 12,
+    :titlesize => 16,
+    :ticksize => 10,
+    :linewidth => 2.0,
+    :spinewidth => 1.0,
 )
 
-# Semantic colors
+# Semantic colors - Refined for both themes
 const COLORS = Dict{Symbol,String}(
-    :profit => "#56d364",
-    :loss => "#f97583",
-    :benchmark => "#8b949e",
-    :highlight => "#58a6ff",
+    :profit => "#48bb78",
+    :loss => "#f56565",
+    :benchmark => "#a0aec0",
+    :highlight => "#4299e1",
 )
 
 # Global state

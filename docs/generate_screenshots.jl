@@ -174,11 +174,12 @@ files = readdir(ASSETS_DIR)
 png_files = filter(f -> endswith(f, ".png"), files)
 println("Generated $(length(png_files)) screenshots:")
 
-total_size = 0
-for f in sort(png_files)
-    size_kb = filesize(joinpath(ASSETS_DIR, f)) / 1024
-    total_size += size_kb
-    println("  • $f ($(round(size_kb, digits=1)) KB)")
+let total_size = 0.0
+    for f in sort(png_files)
+        size_kb = filesize(joinpath(ASSETS_DIR, f)) / 1024
+        total_size += size_kb
+        println("  • $f ($(round(size_kb, digits=1)) KB)")
+    end
+    println()
+    println("Total size: $(round(total_size / 1024, digits=2)) MB")
 end
-println()
-println("Total size: $(round(total_size / 1024, digits=2)) MB")

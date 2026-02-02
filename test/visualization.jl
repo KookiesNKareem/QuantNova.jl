@@ -9,17 +9,17 @@ Random.seed!(42)
     @testset "Theme Management" begin
         # Default theme is light
         theme = get_theme()
-        @test theme[:backgroundcolor] == :white
+        @test theme[:backgroundcolor] == "#fafafa"
 
         # Switch to dark theme
         set_theme!(:dark)
         theme = get_theme()
-        @test theme[:backgroundcolor] == "#0d1117"
+        @test theme[:backgroundcolor] == "#1a1a2e"
 
         # Switch back to light
         set_theme!(:light)
         theme = get_theme()
-        @test theme[:backgroundcolor] == :white
+        @test theme[:backgroundcolor] == "#fafafa"
 
         # Invalid theme throws error
         @test_throws ErrorException set_theme!(:invalid)

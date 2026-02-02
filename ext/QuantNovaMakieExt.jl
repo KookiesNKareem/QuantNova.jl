@@ -166,17 +166,48 @@ end
 """
     apply_theme!(ax, theme)
 
-Apply theme settings to a Makie axis.
+Apply theme settings to a Makie axis for professional appearance.
 """
 function apply_theme!(ax, theme::Dict{Symbol,Any})
+    # Background
     ax.backgroundcolor[] = to_color(theme[:backgroundcolor])
-    ax.xgridcolor[] = to_color(theme[:gridcolor])
-    ax.ygridcolor[] = to_color(theme[:gridcolor])
-    ax.xlabelcolor[] = to_color(theme[:textcolor])
-    ax.ylabelcolor[] = to_color(theme[:textcolor])
-    ax.xticklabelcolor[] = to_color(theme[:textcolor])
-    ax.yticklabelcolor[] = to_color(theme[:textcolor])
-    ax.titlecolor[] = to_color(theme[:textcolor])
+
+    # Grid - subtle, professional
+    gridcolor = to_color(theme[:gridcolor])
+    ax.xgridcolor[] = (gridcolor, 0.5)
+    ax.ygridcolor[] = (gridcolor, 0.5)
+    ax.xgridwidth[] = 0.5
+    ax.ygridwidth[] = 0.5
+
+    # Text colors
+    textcolor = to_color(theme[:textcolor])
+    ax.xlabelcolor[] = textcolor
+    ax.ylabelcolor[] = textcolor
+    ax.xticklabelcolor[] = textcolor
+    ax.yticklabelcolor[] = textcolor
+    ax.titlecolor[] = textcolor
+
+    # Axis spines - clean look
+    axiscolor = to_color(get(theme, :axiscolor, theme[:gridcolor]))
+    spinewidth = get(theme, :spinewidth, 1.0)
+    ax.spinewidth[] = spinewidth
+    ax.topspinevisible[] = false
+    ax.rightspinevisible[] = false
+    ax.leftspinecolor[] = axiscolor
+    ax.bottomspinecolor[] = axiscolor
+
+    # Ticks
+    ticksize = get(theme, :ticksize, 10)
+    ax.xticklabelsize[] = ticksize
+    ax.yticklabelsize[] = ticksize
+    ax.xtickcolor[] = axiscolor
+    ax.ytickcolor[] = axiscolor
+
+    # Padding for cleaner look
+    ax.xticklabelpad[] = 5.0
+    ax.yticklabelpad[] = 5.0
+    ax.xlabelpadding[] = 10.0
+    ax.ylabelpadding[] = 10.0
 end
 
 """
@@ -243,33 +274,54 @@ end
 """
     render_equity(spec::VisualizationSpec{BacktestResult})
 
-Render equity curve plot.
+Render equity curve plot with professional styling.
 """
 function render_equity(spec::VisualizationSpec{BacktestResult})
     result = spec.data
     opts = spec.options
     theme = get(opts, :theme, get_theme())
+    title = get(opts, :title, "Portfolio Value")
 
     timestamps, equity = downsample_for_display(result.timestamps, result.equity_curve)
     x_numeric, format_ticks, _ = timestamps_to_numeric(timestamps)
 
-    fig = Figure(backgroundcolor=to_color(theme[:backgroundcolor]), size=(800, 500))
+    linewidth = get(theme, :linewidth, 2.0)
+
+    fig = Figure(
+        backgroundcolor=to_color(theme[:backgroundcolor]),
+        size=(800, 500),
+    )
+
     ax = Axis(fig[1, 1],
-        title="Equity Curve",
-        xlabel="Date",
-        ylabel="Portfolio Value",
+        title=title,
+        xlabel="",
+        ylabel="Value (\$)",
         titlesize=theme[:titlesize],
         xlabelsize=theme[:fontsize],
         ylabelsize=theme[:fontsize],
-        xtickformat=format_ticks
+        xtickformat=format_ticks,
+        xgridvisible=true,
+        ygridvisible=true,
     )
     apply_theme!(ax, theme)
 
-    # Plot equity curve
-    lines!(ax, x_numeric, equity, color=get_color(theme, 1), linewidth=2)
+    # Plot equity curve with gradient fill
+    color = get_color(theme, 1)
+    band!(ax, x_numeric, fill(minimum(equity) * 0.99, length(equity)), equity,
+          color=(to_color(color), 0.15))
+    lines!(ax, x_numeric, equity, color=color, linewidth=linewidth)
 
     # Add initial value reference line
-    hlines!(ax, [result.initial_value], color=to_color(theme[:gridcolor]), linestyle=:dash, linewidth=1)
+    hlines!(ax, [result.initial_value],
+            color=(to_color(theme[:gridcolor]), 0.7),
+            linestyle=:dash,
+            linewidth=1)
+
+    # Format y-axis with currency
+    ax.ytickformat = ys -> ["\$$(round(Int, y/1000))k" for y in ys]
+
+    # Add subtle padding
+    ylims!(ax, minimum(equity) * 0.98, maximum(equity) * 1.02)
 
     return fig
 end
@@ -277,12 +329,13 @@ end
 """
     render_drawdown(spec::VisualizationSpec{BacktestResult})
 
-Render drawdown plot.
+Render drawdown plot with professional styling.
 """
 function render_drawdown(spec::VisualizationSpec{BacktestResult})
     result = spec.data
     opts = spec.options
     theme = get(opts, :theme, get_theme())
+    title = get(opts, :title, "Drawdown")
 
     drawdown = compute_drawdown(result.equity_curve)
     timestamps, dd = downsample_for_display(result.timestamps, drawdown)
@@ -290,22 +343,31 @@ function render_drawdown(spec::VisualizationSpec{BacktestResult})
 
     fig = Figure(backgroundcolor=to_color(theme[:backgroundcolor]), size=(800, 400))
     ax = Axis(fig[1, 1],
-        title="Drawdown",
-        xlabel="Date",
-        ylabel="Drawdown (%)",
+        title=title,
+        xlabel="",
+        ylabel="",
         titlesize=theme[:titlesize],
         xlabelsize=theme[:fontsize],
         ylabelsize=theme[:fontsize],
-        xtickformat=format_ticks
+        xtickformat=format_ticks,
+        xgridvisible=true,
+        ygridvisible=true,
     )
     apply_theme!(ax, theme)
 
-    # Fill area under drawdown curve
-    band!(ax, x_numeric, dd, zeros(length(dd)), color=(to_color(COLORS[:loss]), 0.3))
-    lines!(ax, x_numeric, dd, color=to_color(COLORS[:loss]), linewidth=1.5)
+    # Fill area under drawdown curve with gradient effect
+    loss_color = to_color(COLORS[:loss])
+    band!(ax, x_numeric, dd, zeros(length(dd)), color=(loss_color, 0.25))
+    lines!(ax, x_numeric, dd, color=loss_color, linewidth=1.5)
+
+    # Zero line
+    hlines!(ax, [0.0], color=(to_color(theme[:textcolor]), 0.3), linewidth=0.5)
 
     # Format y-axis as percentage
-    ax.ytickformat = ys -> ["$(round(y*100, digits=1))%" for y in ys]
+    ax.ytickformat = ys -> ["$(round(Int, y*100))%" for y in ys]
+
+    # Set limits with padding
+    ylims!(ax, minimum(dd) * 1.1, maximum(dd) * 0.1)
 
     return fig
 end
@@ -313,37 +375,53 @@ end
 """
     render_returns(spec::VisualizationSpec{BacktestResult})
 
-Render returns distribution histogram.
+Render returns distribution histogram with professional styling.
 """
 function render_returns(spec::VisualizationSpec{BacktestResult})
     result = spec.data
     opts = spec.options
     theme = get(opts, :theme, get_theme())
+    title = get(opts, :title, "Returns Distribution")
 
     returns = result.returns
 
     fig = Figure(backgroundcolor=to_color(theme[:backgroundcolor]), size=(800, 400))
     ax = Axis(fig[1, 1],
-        title="Returns Distribution",
-        xlabel="Return",
-        ylabel="Frequency",
+        title=title,
+        xlabel="Daily Return",
+        ylabel="Count",
         titlesize=theme[:titlesize],
         xlabelsize=theme[:fontsize],
-        ylabelsize=theme[:fontsize]
+        ylabelsize=theme[:fontsize],
+        xgridvisible=false,
+        ygridvisible=true,
     )
     apply_theme!(ax, theme)
 
-    # Histogram with color based on sign
-    hist!(ax, returns, bins=50, color=get_color(theme, 1), strokewidth=1, strokecolor=to_color(theme[:gridcolor]))
+    # Histogram with subtle styling
+    color = get_color(theme, 1)
+    hist!(ax, returns, bins=40,
+          color=(to_color(color), 0.7),
+          strokewidth=0.5,
+          strokecolor=(to_color(color), 1.0))
 
-    # Add vertical line at zero
-    vlines!(ax, [0.0], color=to_color(theme[:gridcolor]), linestyle=:dash)
+    # Zero line
+    vlines!(ax, [0.0], color=(to_color(theme[:textcolor]), 0.4), linewidth=1, linestyle=:dash)
 
-    # Add mean line
+    # Mean line with annotation
     mean_ret = mean(returns)
-    vlines!(ax, [mean_ret], color=to_color(COLORS[:highlight]), linewidth=2, label="Mean: $(round(mean_ret*100, digits=2))%")
+    vlines!(ax, [mean_ret], color=to_color(COLORS[:highlight]), linewidth=2)
 
-    axislegend(ax, position=:rt, backgroundcolor=(to_color(theme[:backgroundcolor]), 0.8))
+    # Format x-axis as percentage
+    ax.xtickformat = xs -> ["$(round(x*100, digits=1))%" for x in xs]
+
+    # Add stats annotation
+    std_ret = std(returns)
+    stats_text = "μ = $(round(mean_ret*100, digits=2))%\nσ = $(round(std_ret*100, digits=2))%"
+    text!(ax, 0.95, 0.95, text=stats_text,
+          space=:relative, align=(:right, :top),
+          fontsize=theme[:fontsize]-2,
+          color=to_color(theme[:textcolor]))
 
     return fig
 end
