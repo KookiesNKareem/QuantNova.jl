@@ -877,7 +877,8 @@ function render_frontier_single(spec::VisualizationSpec{OptimizationResult})
                  markersize=12, marker=:star5, label="Optimal Portfolio")
         axislegend(ax, position=:rb,
                    backgroundcolor=(to_color(theme[:backgroundcolor]), 0.9),
-                   framecolor=(to_color(theme[:gridcolor]), 0.5))
+                   framecolor=(to_color(theme[:gridcolor]), 0.5),
+                   labelcolor=to_color(theme[:textcolor]))
     end
 
     return fig
@@ -987,7 +988,9 @@ function render_frontier(spec::VisualizationSpec{EfficientFrontier})
                  label="Individual Assets")
     end
 
-    axislegend(ax, position=:rb, backgroundcolor=(to_color(theme[:backgroundcolor]), 0.8))
+    axislegend(ax, position=:rb,
+               backgroundcolor=(to_color(theme[:backgroundcolor]), 0.8),
+               labelcolor=to_color(theme[:textcolor]))
 
     # Format axes as percentages
     ax.xtickformat = xs -> ["$(round(x*100, digits=1))%" for x in xs]
@@ -1033,7 +1036,9 @@ function render_frontier_weights(spec::VisualizationSpec{EfficientFrontier})
         lower = upper
     end
 
-    axislegend(ax, position=:rt, backgroundcolor=(to_color(theme[:backgroundcolor]), 0.8))
+    axislegend(ax, position=:rt,
+               backgroundcolor=(to_color(theme[:backgroundcolor]), 0.8),
+               labelcolor=to_color(theme[:textcolor]))
 
     ax.xtickformat = xs -> ["$(round(x*100, digits=1))%" for x in xs]
 
