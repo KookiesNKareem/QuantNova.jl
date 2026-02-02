@@ -2,7 +2,7 @@
 
 QuantNova provides differentiable portfolio optimization with multiple objective functions.
 
-<img src="/assets/viz-frontier-light.png" alt="Efficient Frontier">
+<img src="../assets/viz-frontier-light.png" alt="Efficient Frontier">
 
 ## Objectives
 
@@ -133,7 +133,7 @@ QuantNova provides built-in visualization for optimization results using Makie.j
 
 ### Efficient Frontier
 
-<img src="/assets/viz-frontier-light.png" alt="Efficient Frontier">
+<img src="../assets/viz-frontier-light.png" alt="Efficient Frontier">
 
 ```julia
 using CairoMakie  # or GLMakie for interactive plots
@@ -150,7 +150,7 @@ fig = render(spec)
 
 ### Portfolio Weights
 
-<img src="/assets/viz-weights-light.png" alt="Portfolio Weights">
+<img src="../assets/viz-weights-light.png" alt="Portfolio Weights">
 
 ```julia
 spec = visualize(result, :weights;
