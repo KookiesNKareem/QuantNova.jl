@@ -3,6 +3,8 @@ https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/var
 /* Example */
 /* https://github.com/vuejs/vitepress/blob/main/template/.vitepress/theme/style.css */
 
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap");
+
 .VPHero .clip {
   white-space: pre;
   max-width: 600px;

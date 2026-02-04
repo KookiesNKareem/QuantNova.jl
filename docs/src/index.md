@@ -115,6 +115,12 @@ Same API, different backends:
 
 <div class="features-section">
 
+## Benchmark Methodology
+
+Performance claims and comparisons are fully documented. See the
+[Benchmark Methodology](../manual/benchmarks.md) page for exact scripts,
+parameters, and run commands.
+
 ## What You Can Build
 
 <div class="feature-grid">

@@ -21,7 +21,7 @@ makedocs(;
             "getting-started/quickstart.md",
         ],
         "Examples" => [
-            "examples/pricing-calibration-demo.md",
+            "Pricing and Calibration Case Study" => "examples/pricing-calibration-demo.md",
             "examples/backtesting-demo.md",
             "examples/optimization-demo.md",
             "examples/option-pricing.md",
@@ -31,10 +31,14 @@ makedocs(;
         ],
         "Manual" => [
             "manual/backends.md",
+            "manual/benchmarks.md",
+            "manual/validation.md",
             "manual/montecarlo.md",
             "manual/optimization.md",
             "manual/backtesting.md",
             "manual/interest-rates.md",
+            "manual/scenario-analysis.md",
+            "manual/simulation.md",
         ],
         "API Reference" => "api.md",
     ],
