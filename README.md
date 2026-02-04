@@ -84,7 +84,7 @@ Run the full demo to see pricing, Greeks, SABR calibration, and Monte Carlo in a
 julia --project=. demos/options_pricing_demo.jl
 ```
 
-See the [pricing & calibration demo](https://KookiesNKareem.github.io/QuantNova.jl/dev/examples/pricing-calibration-demo/) in the docs.
+See the [pricing & calibration demo](https://KookiesNKareem.github.io/QuantNova.jl/dev/examples/pricing-calibration-demo) in the docs.
 
 ## AD Backends
 
