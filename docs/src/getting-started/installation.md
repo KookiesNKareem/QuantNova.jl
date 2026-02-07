@@ -9,7 +9,7 @@
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/KookiesNKareem/QuantNova.jl")
+Pkg.add("QuantNova")
 ```
 
 ## With GPU Backends
